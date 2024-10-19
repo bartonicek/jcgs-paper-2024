@@ -120,41 +120,42 @@ involved in making the graphical analysis effective is not so obvious.''
 \end{quote}
 
 The essence of data visualization is comparison. When we visualize, we
-split our data into parts, summarize each part by a set of one or more
-statistics, and then encode these summaries into visual channels such as
-position, size, or color that we then use to draw geometric objects
+split our data into parts, summarize each part one or more summary
+statistics, encode the summaries into visual attributes such as
+position, size, or color, and finally use these attributes to draw
+geometric objects
 \citetext{\citealp{bertin1983}; \citealp{wilkinson2012}; \citealp[for a
 recent review, see][]{franconeri2021}; \citealp{wilke2019}}. For
-example, when drawing a typical barplot, we split our data based on the
-levels of some categorical variable, count or sum up the values of some
-other variable, and finally represent these summaries by drawing bars of
+example, when drawing a typical barplot, we split our data into parts
+based on the levels of some categorical variable, count the number of
+cases in each part, and finally represent the counts by drawing bars of
 the corresponding heights. In this way, each bar becomes a visual
 representation of its own ``small data set'', a subset of the original
 data.
 
-To ground this idea in a more concrete example, one that will be used
-throughout the rest of this paper, imagine going through your bookshelf,
-sorting the books by genre, and stacking them on top of each other. You
-would construct a physical version of the barplot, forming one ``bar''
-(stack) per genre: one bar for sci-fi novels, one bar for romance, one
-bar for detective fiction, and so on. Even from this very simple
-example, interesting mathematical properties jump out: for example, a
-single book cannot go into two stacks (the subsets of the data are
-\emph{disjoint}) and if all of the stacks are combined back together, we
-should end up with the bookshelf we started with \citep[the subsets are
+To ground this idea in a more concrete example that will be used
+throughout this paper, imagine going through your bookshelf, sorting the
+books by genre, and stacking them on top of each other. You would
+construct a physical version of the barplot, forming one ``bar'' (stack)
+per genre: one bar for sci-fi novels, one bar for romance, one bar for
+detective fiction, and so on. Even from this very simple example,
+interesting mathematical properties jump out: for example, a single book
+cannot go into two stacks (the subsets of the data are \emph{disjoint})
+and if all of the stacks are combined back together, we should end up
+with the bookshelf we started with \citep[the subsets are
 \emph{surjective} and cover the entirety of the data set,
 see][]{ziemkiewicz2009}.
 
 Now, just as we can learn about the contents of our library by
 organizing books in the way we just described, we can learn about our
-data by splitting it into parts. A natural question that arises is: can
-we learn more by subdividing our data into even smaller parts and
-comparing these? For instance, in our book example, we could split each
-stack of books into two smaller stacks based on the gender of the
-author. Each smaller stack will then represent the unique combination
-(Cartesian product) of the two categorical variables (genre-gender).
-Moreover, there arises a hierarchical relationship between the stacks:
-by combining two genre-gender stacks (child components) together, we can
+data by splitting it into parts. A natural question then arises: can we
+learn more by subdividing our data into even smaller parts and comparing
+these? For instance, in our book example, we can split each stack of
+books into two smaller stacks based on the gender of the author. Each
+smaller stack will then represent the unique combination (Cartesian
+product) of the two categorical variables (genre and gender). Moreover,
+there arises a hierarchical relationship between the stacks: by
+combining two genre-gender stacks (child components) together, we can
 recover the original genre stack (parent component). Similar situation
 often arises in interactive graphics, where we use techniques such as
 linked selection to highlight specific subsets of our data. Either way,
@@ -163,8 +164,8 @@ greater granularity and discover trends that may otherwise hide in the
 aggregate.
 
 However, once we have subdivided each category into its child
-components, we need a way of representing this information that visually
-preserves the hierarchical nature of the relationship. In data
+components, we need to represent the information in a way that visually
+preserves the hierarchical nature of this relationship. In data
 visualization, there are two popular methods for doing this, known as
 ``stacking'' and ``dodging'' (see Figure \ref{fig:playfair}). These
 methods have existed at least since the time of William Playfair
@@ -199,14 +200,14 @@ charts. Specifically, since the lower y-axis coordinate of a stacked
 segment is pushed up by the cumulative height of the segments below it,
 it becomes difficult to accurately compare segments' length, both within
 and across bars \citep{cleveland1984}. Subsequent research has
-independently validated and expanded upon these findings \citep[see
+independently validated these findings and expanded upon them \citep[see
 e.g.][]{heer2010, thudt2016, quadri2021}. Ultimately, the suboptimal
 statistical legibility of stacking has led some authors to advise
 against its use altogether \citep{kosara2016, wilke2019}, or at least
 urge caution \citep[see e.g.][]{byron2008, cairo2014, franconeri2021}.
 
-However, despite the mixed reception of stacked plots in static
-visualization, they remain a popular choice in interactive data
+However, despite the mixed reception towards stacking in static
+visualization, it remains a popular choice in interactive data
 visualization. Among popular interactive data visualization libraries,
 stacked plots such as bar charts and histograms make frequent appearance
 \citep[see
@@ -220,11 +221,11 @@ in fact offer valuable insights about the mathematical structure
 underlying our visualizations. To make the strongest case possible, we
 bring forward evidence from several levels of the visualization process.
 We start by discussing the properties of visual perception and how they
-apply to both static and interactive data visualizations. Next, we
-explore the process of computing statistical summaries that form the
-basis of our plots. Finally, we dive into the algebraic properties of
-the functions underlying these statistical summaries. Throughout the
-text, we use the example of the humble barplot to ground our discussion.
+apply to both static and interactive visualizations. Next, we explore
+the process of computing statistical summaries that form the basis of
+our plots. Finally, we dive into the algebraic properties of the
+functions underlying these statistical summaries. Throughout the text,
+we use the example of the humble barplot to ground our discussion.
 
 Our goal is to convince you that, in order to produce coherent and
 efficient interactive graphics, we simply cannot treat graphics,
@@ -232,7 +233,7 @@ statistics, and interaction as independent components. Instead we need
 to consider them holistically, within the context of their respective
 visual and mathematical properties. Understanding this deep web of
 interdependence may in turn empower us to innovate and build new kinds
-of robust interactive visualizations.
+of robust and expressive interactive visualizations.
 
 \section{Visual Perception and
 Interactivity}\label{visual-perception-and-interactivity}
@@ -281,19 +282,20 @@ states we tend to see one part of a scene as the central object (the
 example, smaller, darker, and symmetric objects with closed contours are
 more likely to be perceived as the figure \citep{ware2019}.
 
-Whether we intend them to or not, the Gestalt principles how we perceive
-data visualizations. As such, it is a good idea to try to use them to
-our advantage. Sometimes, little effort is needed. Such is the case, for
-example, when identifying clusters in a scatterplot \citep{rosli2015}:
-the principles of proximity and similarity ensure that clouds of
-similarly shaped and colored points will be perceived as discrete groups
-by the observer. In other cases, however, our design choices can have a
-significant impact. For instance, another way to have objects to be
-perceived as part of a group is to draw a closed shape around them
-\citep{cairo2012}. Alternatively, if we want to highlight a particular
-part of a data set, we can leverage the figure and ground principle and
-use attributes such as color and saturation to make it stand out
-\citep[for specific examples, see][34]{franconeri2021, wilke2019}.
+Whether we intend them to or not, the Gestalt principles affect how our
+data visualizations are perceived. As such, it is a good idea to try to
+use them to our advantage. Sometimes, little effort is needed. Such is
+the case, for example, when identifying clusters in a scatterplot
+\citep{rosli2015}: the principles of proximity and similarity ensure
+that clouds of similarly shaped and colored points will be perceived as
+discrete groups by the observer. In other cases, however, our design
+choices can have a significant impact. For instance, another way to have
+objects to be perceived as part of a group is to draw a closed shape
+around them \citep{cairo2012}. Alternatively, if we want to highlight a
+particular part of a data set, we can leverage the figure and ground
+principle and use attributes such as color and saturation to make it
+stand out \citep[for specific examples,
+see][34]{franconeri2021, wilke2019}.
 
 Finally, ignoring or violating the Gestalt principles can make our
 graphics less legible or even misleading. \citet{tufte2001} had
@@ -305,9 +307,8 @@ violate the Gestalt principles. Finally, there is also the issue of
 well-designed graphics that communicate no statistical information at
 all, or even information that is blatantly false
 \citep{cairo2014, franconeri2021, cairo2019, gelman2013, tufte2001}.
-Either way, whether intentional or not, poor design can have a
-significant impact on the legibility and effectiveness of statistical
-graphics.
+Whether intentional or not, poor design can have a significant impact on
+the legibility and effectiveness of statistical graphics.
 
 \subsection{Gestalt and Interactivity}\label{gestalt-and-interactivity}
 
@@ -340,13 +341,13 @@ highlight parts of objects corresponding to the selected cases across
 all other ``linked'' plots. This allows the user to rapidly
 ``drill-down'' \citep{dix1998, theus2002} and explore trends across
 different dynamically-generated subsets of the data \citep[similar to
-interactive filtering, see e.g.][]{heer2012}. The ability to rapidly
+interactive filtering, see e.g.][]{heer2012}. The ability to quickly
 materialize different views of the data makes linked selection a
-particularly versatile tool for data exploration.
+versatile tool for data exploration.
 
-Yet, despite its versatility, linked selection also imposes some
-fundamental constraints on the visualization. Specifically, all objects
-we visualize need to be able to:
+Yet, despite its usefulness, linked selection also imposes some
+fundamental constraints on the figure. Specifically, all objects we
+visualize need to be able to:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -396,21 +397,23 @@ throughout selection - no matter how the heights of the highlighted
 segments within a stacked bar change, the height of the whole bar
 remains constant, and so does the overall outline of the plot.
 
-Dodged barplots lack the degree of visual consistency found in stacked
-barplots. In a dodged barplot, the clusters of segments placed
-side-by-side lack a shared border (common region), leading to several
-design challenges. First, when selection occurs, the jagged contour of
-the dodged barplot can change dramatically as more cases are added or
-removed. This creates distracting visual clutter that makes it difficult
-to track changes over time. Second, selection may alter the height of
-the tallest bar segment in the plot. Since the height of the bar
-segments is not bound by the height of the tallest bar (as is the case
-in stacked barplot), this presents us with a dilemma. Either either we
-make the upper y-axis limit dynamic, meaning that the bar segments will
-always fit the plotting region, but then the context that the upper
-y-axis limit provides is lost with each time selection happens.
-Alternatively, we keep the upper y-axis limit static, but then we risk
-the bar segments growing outside of the bounds of the plotting region.
+Dodged barplots lack this degree of visual consistency. In a dodged
+barplot, bar segments placed side-by-side in clusters, and, since each
+segment can be of different length, these clusters lack a shared border
+(common region). This leads to several design challenges. First, when
+selection occurs, the jagged contour of the dodged barplot can change
+dramatically as more cases are added or removed. This creates
+distracting visual clutter that makes it difficult to track changes over
+time. Second, since the heights of the bar segments are not bound by any
+value present in the plot (unlike the heights of the segments in the
+stacked barplot, which are bound by the height of the tallest bar), we
+need to decide how the handle the upper y-axis limit in response to
+selection. One option is to make the upper y-axis limit dynamic. If we
+do this, we ensure that the bar segments always fit the plotting region,
+however, we also lose the context that the upper y-axis limit provides
+each time selection occurs. Alternatively, we can assign a static value
+to the upper y-axis limit, however, then we risk the bar segments
+growing outside of the bounds of the plotting region.
 
 Stacked barplots offer several other advantages over dodged bars within
 the context of linked selection. First, we propose that stacking also
