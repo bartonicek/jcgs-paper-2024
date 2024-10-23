@@ -94,11 +94,11 @@ in fact deeply connected. This paper aims to shed light on this
 interdependence by relating it to two fundamental concepts from category
 theory: groups and monoids. Specifically, if we want our graphics to
 support interactive features which split our data into parts and then
-combine these parts back together (such as linked selection), then we
-need the statistics in our plots to fulfill certain algebraic
-properties. Ultimately, understanding this hidden structure may empower
-data visualization experts to build more flexible and expressive
-interactive data visualization systems.
+combine these parts back together (such as linked selection), then the
+statistics in our plots need to posses certain algebraic properties.
+Ultimately, by grounding our thinking in these concepts, we may be able
+to build more flexible and expressive interactive data visualization
+systems.
 \end{abstract}
 
 \noindent%
@@ -109,6 +109,8 @@ abstract algebra, the Gestalt Principles, descriptive statistics
 
 \newpage
 \spacingset{1.9} % DON'T change the spacing!
+
+\nocite{horst2020} \nocite{magritte1929}
 
 \section{\texorpdfstring{Introduction
 \label{sec:intro}}{Introduction }}\label{introduction}
@@ -178,12 +180,15 @@ as layering, where we plot bar segments in separate graphical layers and
 use partial transparency to mitigate overplotting.
 
 \begin{figure}
-
-{\centering \includegraphics{paper_files/figure-latex/playfair-1} 
-
-}
-
-\caption{Examples of three methods for dealing with bars that have split into child components (segments). Top row: dodging (left) and stacking/highlighting (right); both by William Playfair (1801, 1822). Bottom row: layering (created with ggplot2; Wickham, 2010).}\label{fig:playfair}
+\centering
+\includegraphics{paper_files/figure-latex/playfair-1.pdf}
+\caption{\label{fig:playfair}Examples of three methods for dealing with
+bars that have split into child components (segments). Top row: dodging
+(left) and stacking/highlighting (right), both by William Playfair
+\citetext{\citeyear{playfair1801}; \citeyear{playfair1822}}. Bottom row:
+layering, created with \texttt{ggplot2}
+\citetext{\citealp{wickham2010}; \citealp[the source of the underlying
+data is the U.S. fuel economy data set,][]{mpg2024}}.}
 \end{figure}
 
 Much has been written about the relative merits of stacking, dodging,
@@ -380,7 +385,8 @@ dodged barplot changes dramatically with selection. Note the changes to
 the upper y-axis limit and the absence of the lighter segment among the
 bar representing category B in the rightmost plot (the darker segment
 has been stretched to fill the available space; \texttt{ggplot2} default
-for handling empty subcategories). Data source: \citet{henderson1981}.}
+for handling empty subcategories). The source of the underlying data is
+the \texttt{mtcars} dataset \citep{henderson1981}.}
 \end{figure}
 
 First, we propose that stacking is the superior method for
@@ -416,32 +422,32 @@ Stacked bars may offer several other advantages over dodged bars within
 the context of linked selection. First, we propose that stacking also
 provides a simpler mental model for \emph{selection}. Since each stacked
 bar is a single visual entity, it makes intuitive sense that clicking it
-will select the entire category corresponding to it. Indeed, this is how
-many interactive data visualization systems implement linked selection:
-clicking on part of an object selects the category corresponding to the
-entire object \citep[see
+will select the entire corresponding category. Indeed, this is how many
+interactive data visualization systems implement default linked
+selection: clicking on part of an object selects all cases corresponding
+to the whole object \citep[see
 e.g.][]{cook2023, vegalite2022, vanderplas2018, xie2014, theus2002, urbanek2003, urbanek2011, swayne2003}.
-On the other hand, with dodged bars, the expectation is less clear: when
-we click on a segment in a dodged barplot, do we select the entire
-category or just the cases corresponding to the segment? Second, in a
-stacked barplot, the bar width and inter-bar gap are constant throughout
-selection. In a dodged barplot, it is not clear how to handle the gaps
-when some selection groups are empty - should we leave gaps for the
-(currently absent) highlighted segments, or draw wide bars and only
-shrink them in response to selection? If we do the former, the barplot
-may show asymmetric gaps and illusory clustering due to the absence of
-some segments. If we do the latter, we break the principle that the area
-of the bar should be proportional to the number of cases it represents
-\citep{cleveland1985}. Finally, by presenting fewer visual entities on
+On the other hand, with dodged bars, since the segments do not form a
+unified whole, the expectation is less clear: when we click on a segment
+in a dodged barplot, do we select the entire category or just the cases
+corresponding to the individual segment? Second, stacked barplots
+maintain constant bar widths and inter-bar gaps throughout selection. In
+a dodged barplot, it is not clear what to do when some selection groups
+are empty. Should we leave gaps for the (absent) highlighted segments,
+leading to asymmetric gaps and potential illusory clustering? Or should
+we draw wide segments and only shrink them in response to selection,
+avoiding asymmetry but violating the principle of area proportionality
+\citep{cleveland1985}? Finally, by presenting fewer visual entities on
 the screen, stacked bars may also reduce cognitive load
 \citetext{\citealp{sweller2019}; \citealp[for a non-technical overview,
 see][]{knaflic2015}}.
 
-To summarize, stacked bars exhibit a more graceful and visually pleasing
-behavior when combined with selection. In contrast, dodging produces
-non-uniform objects with jagged outline that changes significantly with
-selection. These difference may explain why stacking is still popular in
-the interactive data visualization community.
+To summarize, stacked bars behave in a fairly graceful and visually
+pleasing way when combined with selection. Dodged bars, on the other
+hand, lack a bounded uniform outline, and this makes them behave
+erratically when combined with selection, hurting the interpretability
+of the plot. These difference may explain the continued popularity of
+stacking within the interactive data visualization community.
 
 However, a key question remains: when is stacking appropriate? So far,
 we have focused on the visual aspect of stacking. But stacking goes
@@ -465,7 +471,7 @@ data.
 
 }
 
-\caption{A representation is not the thing itself. Left: The Treachery of Images by René Magritte (1929) makes the point that a painting of a pipe is not the thing it represents (a pipe). Right: similarly, an filled with coloured rectangles is not a barplot, unless the rectangles accurately represent some underlying data.}\label{fig:magritte}
+\caption{The representation of a thing is not the thing itself. Left: The Treachery of Images by René Magritte [-@magritte1929] makes the point that a painting of a pipe is not a pipe. Right: similarly, an image filled with coloured rectangles is not a barplot, unless the rectangles accurately represent some underlying data.}\label{fig:magritte}
 \end{figure}
 
 Thus, we always have to start with the data. But the raw data is rarely
@@ -879,21 +885,21 @@ monoids but no inverse).
 \subsection{Groups, Monoids, and
 Graphics}\label{groups-monoids-and-graphics}
 
-The connection between summary statistics and algebraic structures is
-important because it allows us to predict which new combinations of
-summaries and figures will ``work''. For example, while not generally
-thought of as a summary statistic, the convex hull \citep[see
-e.g.][]{barber1996} provides a way to reduce a set of data points into a
-simpler ``summary'', see Figure \ref{fig:convexhull}. We can recast
-convex hull algorithm as a monoid: starting with an empty set, we
-iterate through the data, adding points if they lie outside of the
-current hull (and removing any points in the interior of the new hull).
-This may not be the most computationally efficient method of finding
-convex hulls, however, since it does meet the definition of a monoid,
-this tells us \emph{what convex hulls can be used for}. If we combine
-two convex hulls, we know that the new hull will be a valid summary for
-the union of the underlying data points. In turn, this allows us to
-implement interactive features such as single-group
+We can use the connection between summary statistics and algebraic
+structures to offload some of the cognitive effort required when
+thinking about new types of interactive visualizations. For example,
+while not generally thought of as a summary statistic, the convex hull
+\citep[see e.g.][]{barber1996} provides a way to reduce a set of data
+points into a simpler ``summary'', see Figure \ref{fig:convexhull}. We
+can recast convex hull algorithm as a monoid: starting with an empty
+set, we iterate through the data, adding points if they lie outside of
+the current hull (and removing any points in the interior of the new
+hull). This may not be the most computationally efficient method of
+finding convex hulls, however, since it does meet the definition of a
+monoid, this tells us \emph{what convex hulls can be used for}. If we
+combine two convex hulls, we know that the new hull will be a valid
+summary for the union of the underlying data points. In turn, this
+allows us to implement interactive features such as single-group
 highlighting/selection, safe in the knowledge that the underlying
 structure is preserved.
 
@@ -905,6 +911,13 @@ convex hulls may irrevocably collapse information. As such, we cannot
 safely use convex hulls to display multiple selection groups, without
 resorting to some ad-hoc methods.
 
+While it is possible to reach the same conclusions via ad hoc reasoning
+or manual testing, these methods may be time-consuming and have to be
+applied to each new visualization style separately. By grounding our
+understanding in the simple theory of groups and monoids, we can bypass
+most of this effort and reason about the properties of the visualization
+directly.
+
 \begin{figure}
 \centering
 \includegraphics{paper_files/figure-latex/unnamed-chunk-2-1.pdf}
@@ -913,22 +926,22 @@ representation of single-group selection but not multi-group selection.
 The light polygons shows the convex hull of the whole dataset, the dark
 polygon shows the hull of one selection group, the white dashed line
 shows the hull of a second selection group, and the medium-brightness
-polygon shows the combined hull of two selection groups. Points show
+polygon shows the combined hull of the two selection groups. Points show
 individual cases. Left: since convex hull is a monoid, we can use it to
-show single highlighted group. Right: because of the lack of an inverse,
-we cannot guarantee that we will be able to recover either of the
-original hulls from the combined hull - we do not know how many interior
-points were ``forgotten''. The source of the data is the Palmer penguins
-data set, Horst 2020.}
+show a single highlighted group. Right: because convex hull lacks an
+inverse, after combining two hulls, we cannot guarantee we will be able
+to recover either of the original hulls - we do not know how many
+interior points were ``forgotten''. The source of the underlying data is
+the Palmer penguins data set \citep{horst2020}.}
 \end{figure}
 
 \subsection{\texorpdfstring{Groups, Monoids, and the Neutral Element
 \label{sec:advantages}}{Groups, Monoids, and the Neutral Element }}\label{groups-monoids-and-the-neutral-element}
 
-There are also other advantages that groups and monoids offer for
-visualizing data. One of these is the existence of the neutral element
-\(e\) (see Section \ref{sec:monoids}). While seemingly inconspicuous,
-the neutral element can actually be quite useful.
+There are other benefits that groups and monoids offer for visualizing
+data. One of these is the existence of the neutral element \(e\) (see
+Section \ref{sec:monoids}). While seemingly inconspicuous, the neutral
+element can actually be quite useful.
 
 Specifically, the neutral element ensures that we can always represent
 empty subsets of our data. Turning once more to the book example from
@@ -944,88 +957,67 @@ books''.
 
 A common approach is to omit the objects representing empty subsets.
 However, with non-monoidal summaries, this approach is flawed and leads
-ambiguity. Suppose we are drawing the bars of averages. If we omit bars
-representing the empty categories, then the missingness of a bar can
-indicate either of two things: either there are \emph{no} cases in the
+to ambiguity. Suppose we are drawing the bars of averages. If we omit
+bars representing empty categories, then the missingness of a bar can
+indicate one of two things: either there are \emph{no} cases in the
 category, or there \emph{are} cases and their average is equal to the
 lower y-axis limit. There is just no way to tell from the graphic alone.
-In contrast, with monoidal summaries such as sums, the message of an
-object's absence is unambiguous. Regardless of whether there are zero or
-hundred cases in a category, if the bar representing them is missing,
-this means that their sum is zero.
+In contrast, with monoidal summaries such as sums, the absence of an
+object (bar) sends a clear message. Regardless of whether there are zero
+or hundred cases in a category, if the corresponding bar is missing,
+then we know their sum is zero.
 
-The neutral element can also provide a new perspective on a perennial
-debate in data visualization: should the base of a barplot always start
-at zero? Some authors argue that starting bars from a non-zero base
-makes the lengths of the bars meaningless \citep{cleveland1985}.
-However, \citet{wilkinson2012}, for example, suggests that the bar base
-is really a statement about scales rather than about graphics, and as
-such there is no compulsion for starting it at zero. We offer the
-following new perspective: often, it might make sense for the base of
-the barplot to start at \(e\), the neutral element, since this
-represents the default state of doing nothing. In other words, the bar
-base is tied to the properties of the \emph{statistic}, rather than the
-just the graphic or scale.
+The neutral element can also provide a new perspective on the
+longstanding debate in data visualization: should the base of a barplot
+always start at zero? Some authors argue that starting from a non-zero
+base renders bar lengths meaningless \citep{cleveland1985}. On the other
+hand, \citet{wilkinson2012}, for example, suggests that the bar base is
+really a statement about scales rather than graphics, and as such it
+does not have to be zero. We offer the following new perspective: often,
+it might make sense to start the base of the barplot at \(e\), the
+neutral element, since this represents the default state of ``doing
+nothing''. In other words, the bar base is tied to the properties of the
+\emph{statistic}, rather than just the graphic or the scale. For
+instance, in a logarithmic barplot, the underlying monoidal operation is
+multiplication, and so the base of the bars should start at one.
 
-In a barplot of sums or counts, this approach aligns with the
-traditional prescription, since the neutra element is zero. However, in
-a barplot of products, the neutral element is one. Thus, we may should
-our bars at one. One might object that this invalidates the y-axis as a
-ratio scale \citep{stevens1946}, since a bar representing the value 4
-will be no longer twice as tall as the bar representing the value 2. And
-indeed, if we start the base at one, the bar representing the value 2
-will be only 2 - 1 = 1 units tall, whereas the bar representing the
-value 4 will be 4 - 1 = 3 units tall. However, we need to think about
-what the values represent. The bar representing the value 2 shows a
-200\% change or 100\% increase; the bar representing 4 shows 400\%
-change or 300\% increase. Therefore, it makes sense that the bar
-representing 4 is three times taller. Also, this scale still fits the
-\citet{stevens1946} definition of a ratio scale, since we can still
-determine equality of ratios: 1.5 is to 2 (100\% / 50\% = 2, double the
-increase) as 2 is to 3 (200\% / 100\% = 2, double the increase).
-
-This example provides further evidence to support the claim that we
-cannot separate statistics from other data visualization components such
-as graphics and scales. Even before we apply any transformations, the
-method we have used to derive our summary statistics determines
-important properties of our visualization. We need to be mindful of
-this.
+These example provides further support for the claim that we cannot
+separate statistics from other components such as graphics and scales.
+Even before we apply any transformations, the method we have used to
+derive our summary statistics determines important properties of our
+visualization. We need to be mindful of this.
 
 \subsection{Groups, Monoids, and
 Computation}\label{groups-monoids-and-computation}
 
-Groups and monoids also come with some inherent computational
-advantages. Specifically, if a summary statistic is a monoid,
-associativity guarantees that it can be computed in a single pass
-through the data (i.e.~\(O(n)\) complexity), and in a
-distributed/parallel fashion \citep[see e.g.][]{lammel2008, lin2013}.
-This is why monoids are popular in functional programming, where they
-are used alongside the so-called \texttt{fold} or \texttt{reduce}
-functions \citep[see e.g.][]{milewski2018, abelson2022}. To be fair,
-computational efficiency is usually not the primary concern in data
-visualization: most data visualization systems are designed to work in a
-single-threaded environment, and rely on summary statistics that are
-fairly cheap to compute. Nevertheless, the guarantee of inherent
-efficiency can still be useful when visualizing larger data sets.
+Groups and monoids also offer some inherent computational advantages.
+Specifically, if a summary statistic is a monoid, associativity
+guarantees that it can be computed in a single pass through the data
+(i.e.~\(O(n)\) complexity), and in a distributed/parallel fashion
+\citep[see e.g.][]{lammel2008, lin2013}. This is makes monoids popular
+in functional programming, where they are known as the \texttt{fold} or
+\texttt{reduce} functions \citep[see e.g.][]{milewski2018, abelson2022}.
 
-The computational advantages of groups and monoids become significant in
-interactive data visualization, however. Specifically, when designing an
-interactive data visualization, we may be able to exploit the fact that
+While computational efficiency is usually not the number one concern in
+static visualization, it becomes significant in the context of
+interactive graphics. Here, we may be able to use the properties of
+groups and monoids to avoid unnecessary computation. Specifically, when
+using groups and monoids, we can exploit associativity: the fact that
 summaries on fine-grained subsets of the data ``add up'' to the
-summaries on coarse-grained subsets (their unions) to avoid unnecessary
-computation. Consider a linked histogram with reactive axes and
+summaries on coarse-grained subsets.
+
+Consider a stacked histogram, with linked selection, reactive axes, and
 interactive manipulation of binwidth and anchor. When the user engages
 in selection, the counts within the individual highlighted segments may
-change but the counts across the whole stacked bars will not. Thus,
-there is no need to recompute and update the upper y-axis limit - we
-know this will stay constant throughout selection. However, if the user
-interactively changes the binwidth or anchor, then both the counts
-within the whole bars \emph{and} the highlighted segments may change and
-so we need to update the graphic appropriately.
+change but the counts within the whole bars will stay constant.
+Therefore, there is no need to update the upper y-axis limit. However,
+if the user updates either the binwidth or the anchor, then both the
+counts within the whole bars \emph{and} within the highlighted segments
+may change, and so we need to update the graphic appropriately.
 
 In other words, associativity allows us to implement strategic updating.
-Fine-grained summaries (individual segments) need to be updated when the
-more coarse-grained summaries (whole stacked bars) change, but not vice
+Fine-grained summaries (individual segments) need to be updated whenever
+coarse-grained summaries (whole stacked bars) change, but not vice
 versa. By pre-computing summaries on different levels of aggregation, we
 may be able to reduce computational effort.
 
@@ -1041,42 +1033,53 @@ discussion initiated by][]{crossfilter2024}}\footnote{Note that, as the
   present date, we are not aware of any explicit discussion of monoids
   or groups in the Crossfilter documentation}.
 
-However, while the inverse does bring advantages, it is also the case
-that fewer summary statistics have it. For instance, as was mentioned
-before, while maximum operator is a valid monoid, it lacks an inverse
-and as such does not meet the definition of a group. Once we summarize
-some data with the maximum, we cannot retrieve the second or third
-highest value - that information is gone forever. And there are many
-other operations (such as the convex hull in Figure
-\ref{fig:convexhull}) which lack an inverse. As such, when designing and
-interactive data visualization library, we need to carefully weigh the
-ability to support different kinds of summary statistics (general,
-monoids, groups) versus supporting different kinds of interactions
-(e.g.~single-group selection vs.~multi-group selection).
+However, while the presence of the inverse does bring some advantages,
+it is also the case that fewer summary statistics have an inverse. For
+instance, as was mentioned before, while maximum operator is a valid
+monoid, it lacks an inverse and as such does not meet the definition of
+a group. Once we summarize some data with the maximum, we cannot
+retrieve the second or third highest value - that information is gone
+forever. And there are many other operations (such as the convex hull in
+Figure \ref{fig:convexhull}) which lack an inverse. As such, when
+designing and interactive data visualization library, we need to
+carefully weigh the ability to support different kinds of summary
+statistics (general, monoids, groups) against the ability to support
+wide range of interactions (e.g.~single-group selection vs.~multi-group
+selection).
 
-\section{Conclusion}\label{conclusion}
+\section{Discussion}\label{discussion}
 
 We hope we have demonstrated that, when designing interactive graphics,
-algebraic thinking is invaluable. To support specific interactive
-features, the statistics underlying our plots must possess appropriate
-algebraic properties. For instance, if we want to display the result of
-splitting our data into parts and combining these parts back together,
-then we need either of two classes of mathematical structures. If we
-want to compare nested subsets of our data (for example, via
-single-group linked selection) then our summaries need to be monoids. If
-we want to compare disjoint parts of our data (multi-group linked
-selection), then our summaries need to be (algebraic) groups. The
-properties of these structures ensure that our figures are statistically
-sound, computationally efficient, and adhere to good design principles.
+algebraic thinking is invaluable. To support certain interactive
+features such as linked selection, the statistics underlying our plots
+must possess appropriate algebraic properties. If we want to display the
+result of splitting our data into parts and then combining these parts
+back together, then we need either monoids or groups. Monoids are for
+comparing nested subsets of our data (single-group linked selection)
+whereas groups are for comparing disjoint parts of our data (multi-group
+linked selection). The properties of these structures ensure that our
+figures will be statistically sound, computationally efficient, and
+adhere to good design principles.
 
-We have focused on unitality, associativity, and inverses, however, it
-may be useful to consider other algebraic properties as well. For
-instance, many of the visual attributes that we use to represent our
-data can only \emph{grow} in one direction. Such is the case with, for
-example, width, height, and area (there is no such thing as ``negative
-area''). If the visual attribute can only grow in one direction, then
-our summary statistic should be \emph{monotonic}, such that if
-\(x_1 \leq y_1\) and and \(x_2 \leq y_2\) then
+We do not advocate for exclusive use of groups and monoids. Rather, we
+want to highlight the inherent trade-off present in the choice of a
+summary statistic. Few summary statistics meet the definition of a
+group, but, if we choose such a statistic, then we can do a lot of
+things with it. With a monoid, our options are more limited, and with a
+non-monoidal statistic, even more so. Like many past authors \citep[such
+as][]{tufte2001, tukey1977, wilkinson2012}, we want to emphasize the
+importance of thinking critically about the mathematical structure
+underlying our graphics. Geometric objects, statistics, and interaction
+are all deeply connected, and groups and monoids merely allow us to
+carve out a small space of fairly well-behaved visualizations.
+
+On that note, while we have focused on unitality, associativity, and
+inverses, it may be useful to consider other algebraic properties as
+well. For instance, many of the visual attributes that we use to
+represent our data, such as width, height, or area, can only \emph{grow}
+in one direction (there is no such thing as ``negative area''). If this
+is the case, then our summary statistic should be \emph{monotonic}, such
+that if \(x_1 \leq y_1\) and and \(x_2 \leq y_2\) then
 \(x_1 \otimes x_2 \leq y_1 \otimes y_2\). Similarly, in many types of
 plots, the order of the data points does not matter, however, in some,
 such as time-series plots, it does. Thus, it may be important to
@@ -1086,43 +1089,31 @@ exploration of these properties in relation to interactive graphics may
 yield useful insights, however, that is outside of the scope of the
 present paper.
 
-We do not advocate for exclusively visualizing groups and monoids.
-Rather, we want to highlight the trade-off present in the choice of the
-summary statistic. Few summary statistics meet the definition of a
-group, but, if we choose such a statistic, then we can do a lot of
-things with it. With a monoid, our options are more limited, and with a
-non-monoidal statistic, even more so. Thus, like many past authors
-\citep[such as][]{tufte2001, tukey1977, wilkinson2012}, we simply want
-to point to the importance of thinking critically about the mathematical
-structure underlying our graphics. Geometric objects, statistics, and
-interaction are all deeply connected, and a full elaboration on this web
-of interdependence may require a lot more work. Groups and monoids
-merely allow us to carve out a small space of well-behaved graphics.
-
-On a more practical note, we also need a framework for efficiently
-transforming raw data into summary statistics that can be displayed by
-interactive graphics. A decade ago, \citet{wickham2009} noted the lack
-of such a formal pipeline (or ``plumbing''), and, despite some attempts
-at implementing such pipelines \citep[see e.g.][]{lawrence2009}, that
-same sentiment was echoed again recently \citep{vanderplas2020}.
-Ideally, such a framework would minimize recomputation during user
-interaction. The computational ``shortcuts'' that groups and monoids
-provide may be invaluable here. We envision a visualization pipeline
-structured as a hierarchy of reactive partitions, where only the
-downstream (finer) partitions need to be recomputed when the upstream
-(coarser) partitions change, but not vice versa. We are currently
-exploring this concept in an R package called
+On a more practical note, interactive graphics require efficient
+pipelines for transforming raw data into summary statistics, and,
+currently, we still do not possess a formal framework for doing this. A
+decade ago, \citet{wickham2009} noted the lack of such data pipelines,
+and, despite some attempts at implementation since then \citep[see
+e.g.][]{lawrence2009}, the same sentiment was echoed again recently
+\citep{vanderplas2020}. The ultimate goal is to minimize recomputation
+during user interaction, and this is where the computational shortcuts
+that groups and monoids provide may prove invaluable. We envision a
+visualization pipeline structured as a hierarchy of reactive partitions,
+where only the downstream (fine) partitions need to be recomputed when
+the upstream (coarse) partitions change, but not vice versa. We are
+currently exploring this idea in an R package called
 \texttt{plotscaper}\footnote{\texttt{https://github.com/bartonicek/plotscaper}}
-(the project still has far to go to be truly generic).
+(note that the project is still under development).
 
 Data visualization, in practice, is rarely about mathematical purity.
 Real world data is often flawed or incomplete, and it takes cunning and
 experience to dredge up valuable insights from it. Nevertheless, we
 believe that simple algebraic thinking offers a valuable foundation.
-Concepts like monoids and groups provide a rigorous framework for
-reasoning about graphics, interactive or otherwise. Ultimately, these
-concepts may empower us to build a broader class of robust interactive
-data visualizations.
+Concepts like groups and monoids provide a solid framework for reasoning
+about graphics, interactive or otherwise. By grounding our thinking in
+these concepts, we may be able to offload some of the required cognitive
+effort and envision new types of robust and expressive interactive
+graphics.
 
 \section{Disclosure Statement}\label{disclosure-statement}
 
