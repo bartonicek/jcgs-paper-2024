@@ -357,9 +357,9 @@ visualize need to be able to:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \textbf{Be selected}
+  Be selected
 \item
-  \textbf{Represent selection}
+  Represent selection
 \item
   (both in a visually and statistically sound way).
 \end{enumerate}
@@ -466,12 +466,14 @@ to make sure that each rectangle accurately represents some underlying
 data.
 
 \begin{figure}
-
-{\centering \includegraphics{paper_files/figure-latex/magritte-1} 
-
-}
-
-\caption{The representation of a thing is not the thing itself. Left: The Treachery of Images by René Magritte [-@magritte1929] makes the point that a painting of a pipe is not a pipe. Right: similarly, an image filled with coloured rectangles is not a barplot, unless the rectangles accurately represent some underlying data.}\label{fig:magritte}
+\centering
+\includegraphics{paper_files/figure-latex/unnamed-chunk-2-1.pdf}
+\caption{\label{fig:magritte}The representation of a thing is not the
+thing itself. Left: The Treachery of Images by René Magritte
+\citeyearpar{magritte1929} makes the point that a painting of a pipe is
+not a pipe. Right: similarly, an image filled with coloured rectangles
+is not a barplot, unless the rectangles accurately represent some
+underlying data.}
 \end{figure}
 
 Thus, we always have to start with the data. But the raw data is rarely
@@ -607,7 +609,7 @@ the following section.
 \begin{figure}
 \centering
 \includegraphics{paper_files/figure-latex/sumprodmax-1.pdf}
-\caption{\label{fig:sumprodmax} Different operators can be used for
+\caption{\label{fig:sumprodmax}Different operators can be used for
 stacking. The values \texttt{1.2}, \texttt{1.8}, \texttt{NA}, and
 \texttt{1.5} were assigned to a 2-by-2 table and stacked using three
 different operators. Left: stacking using the sum operator. Middle:
@@ -920,7 +922,7 @@ directly.
 
 \begin{figure}
 \centering
-\includegraphics{paper_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{paper_files/figure-latex/unnamed-chunk-3-1.pdf}
 \caption{\label{fig:convexhull}Convex hull can be used as a valid
 representation of single-group selection but not multi-group selection.
 The light polygons shows the convex hull of the whole dataset, the dark
@@ -929,8 +931,8 @@ shows the hull of a second selection group, and the medium-brightness
 polygon shows the combined hull of the two selection groups. Points show
 individual cases. Left: since convex hull is a monoid, we can use it to
 show a single highlighted group. Right: because convex hull lacks an
-inverse, after combining two hulls, we cannot guarantee we will be able
-to recover either of the original hulls - we do not know how many
+inverse, after combining two hulls, we cannot guarantee that we will be
+able to recover either of the original hulls - we do not know how many
 interior points were ``forgotten''. The source of the underlying data is
 the Palmer penguins data set \citep{horst2020}.}
 \end{figure}
